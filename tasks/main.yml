@@ -1,21 +1,29 @@
 ---
-# tasks file for simple_apache_role
-- name: Ensure apache package is present
-  ansible.builtin.package:
-    name: "{{ apache_package_name }}"
-    state: present
-  notify: Restart Apache
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+  become: true
 
-- name: Ensure apache service is started and enabled
+- name: Forceer Purge van Apache2 (voor een schone start)
+  ansible.builtin.apt:
+    name: apache2
+    state: absent
+    purge: yes
+  become: true
+
+- name: Installeer Apache web server
+  ansible.builtin.package:
+    name: apache2
+    state: present
+    update_cache: yes
+  become: true
+  when: not ansible_check_mode
+  notify: "herlaad_apache2"
+
+- name: Zorg dat de Apache service start en ge-enabled is
   ansible.builtin.service:
-    name: "{{ apache_service_name }}"
+    name: apache2
     state: started
     enabled: yes
-
-# Handlers are triggered by 'notify' statements at the end of the play
-# We add them here for simplicity, but they normally go in handlers/main.yml
-handlers:
-  - name: Restart Apache
-    ansible.builtin.service:
-      name: "{{ apache_service_name }}"
-      state: restarted
+  become: true
+  when: not ansible_check_mode
