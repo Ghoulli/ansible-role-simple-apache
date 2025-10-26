@@ -1,0 +1,7 @@
+---
+# defaults file for simple_apache_role
+
+# Set default package and service names.
+# These can be overridden by users for different OS families (e.g., httpd for Red Hat).
+apache_package_name: apache2
+apache_service_name: apache2

@@ -1,0 +1,21 @@
+---
+# tasks file for simple_apache_role
+- name: Ensure apache package is present
+  ansible.builtin.package:
+    name: "{{ apache_package_name }}"
+    state: present
+  notify: Restart Apache
+
+- name: Ensure apache service is started and enabled
+  ansible.builtin.service:
+    name: "{{ apache_service_name }}"
+    state: started
+    enabled: yes
+
+# Handlers are triggered by 'notify' statements at the end of the play
+# We add them here for simplicity, but they normally go in handlers/main.yml
+- handlers:
+    - name: Restart Apache
+      ansible.builtin.service:
+        name: "{{ apache_service_name }}"
+        state: restarted
