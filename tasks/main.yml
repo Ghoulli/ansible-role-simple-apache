@@ -14,8 +14,8 @@
 
 # Handlers are triggered by 'notify' statements at the end of the play
 # We add them here for simplicity, but they normally go in handlers/main.yml
-- handlers:
-    - name: Restart Apache
-      ansible.builtin.service:
-        name: "{{ apache_service_name }}"
-        state: restarted
+handlers:
+  - name: Restart Apache
+    ansible.builtin.service:
+      name: "{{ apache_service_name }}"
+      state: restarted
